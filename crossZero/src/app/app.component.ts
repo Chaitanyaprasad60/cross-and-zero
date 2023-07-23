@@ -30,9 +30,12 @@ export class AppComponent {
     if (this.turn !== this.huPlayer) return
     this.makeMove(gridNumber,this.huPlayer); //Human makes the move
 
-    if(this.gameOver) return  //If game is not yet over then AI makes the move
-    let aiMove = this.bestSpot();
-    this.makeMove(aiMove,this.aiPlayer);  
+    setTimeout(()=>{
+      if(this.gameOver) return  //If game is not yet over then AI makes the move
+      let aiMove = this.bestSpot();
+      this.makeMove(aiMove,this.aiPlayer);  
+    },900)
+    
   }
 
   makeMove(gridNumber:number,player:string){
