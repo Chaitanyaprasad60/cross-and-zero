@@ -1,0 +1,44 @@
+:root {
+    --boxSize: 10vw;
+    --border: 0.1vw
+}
+
+.container {
+    flex-direction: row;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+// OLD Style using Flexbox row wrap -- It is not the proper solution 
+// New solution using grid fits perfectly exact!!!
+// .board {
+//     width: calc(0.7vw + var(--boxSize)*3);
+//     height: calc(0.7vw + var(--boxSize)*3);
+//     flex-direction: row ;
+//     display: flex;
+//     flex-flow:row wrap;  
+//     border: 0.1vw solid;
+
+// }
+
+.board {
+    display: grid;    
+    grid-template-columns: repeat(3,  var(--boxSize));   
+    grid-template-rows: repeat(3, var(--boxSize)); 
+    grid-gap: var(--border);
+    border: var(--border) solid;
+}
+
+.box {
+    width: var(--boxSize);
+    height: var(--boxSize);
+    border: 0.1vw solid;
+    display: flex;
+    font: 8vw bold;
+    align-items: center;
+    justify-content: center;
+
+
+}

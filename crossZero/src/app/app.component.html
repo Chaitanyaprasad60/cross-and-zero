@@ -1,0 +1,16 @@
+<div class="container">
+  <p>{{gameStatus}}</p>
+  <div class="board">
+    <div *ngFor="let i of [0,1,2]">
+      <div *ngFor="let j of [0,1,2]">
+        <div class="box" (click)="humanMove(3*j+i)">
+          {{grid[3*j+i]}}
+        </div>
+  
+      </div>
+  
+    </div>
+  </div>
+
+
+</div>
