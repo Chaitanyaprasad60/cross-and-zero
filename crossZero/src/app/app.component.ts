@@ -23,22 +23,45 @@ export class AppComponent {
   aiPlayer = 'O'
   turn = this.huPlayer;
   gameOver = false;
-  gameStatus = 'Game Pending ..';
+  gameStatus = 'Game On ..';
 
   humanMove(gridNumber: number) { //Only this function will be used to make Human Move.    
 
     if (this.turn !== this.huPlayer) return
-    this.makeMove(gridNumber,this.huPlayer); //Human makes the move
-
+    this.makeMove(gridNumber, this.huPlayer); //Human makes the move
     setTimeout(()=>{
-      if(this.gameOver) return  //If game is not yet over then AI makes the move
-      let aiMove = this.bestSpot();
-      this.makeMove(aiMove,this.aiPlayer);  
-    },900)
-    
+      if(Math.random() < 0.3){
+        this.randomMove()
+      }
+      else{
+        this.bestMove()
+      }    
+    },900)    
+
+  }
+  resetGame() {
+    this.gameStatus = "Game On ..."
+    this.turn = this.huPlayer;
+    this.gameOver = false;
+    this.grid = ['', '', '', '', '', '', '', '', ''];    
   }
 
-  makeMove(gridNumber:number,player:string){
+  randomMove(){
+   
+    let availSpots = this.emptySquares(); 
+    if(availSpots.length == 0) return  
+    let randomSpot = availSpots[Math.floor((Math.random() * (availSpots.length-1)))];
+    console.log(randomSpot,availSpots)
+    this.makeMove(randomSpot, this.aiPlayer);
+  }
+
+  computerFirst() {
+    this.resetGame()
+    this.bestMove();
+
+  }
+
+  makeMove(gridNumber: number, player: string) {
     if (this.gameOver) return
     this.grid[gridNumber] = player;
     let result = this.checkWin(player); //Check for winner after every move
@@ -69,30 +92,32 @@ export class AppComponent {
   }
 
   emptySquares() {
-    let emptyCells:number[] = [];
-    this.grid.forEach((element,index)=>{
-      if(element == '') emptyCells.push(index)
+    let emptyCells: number[] = [];
+    this.grid.forEach((element, index) => {
+      if (element == '') emptyCells.push(index)
     })
     return emptyCells;
   }
 
-  bestSpot() {
-    return this.minimax(this.aiPlayer).index;
+  bestMove() {
+      if (this.gameOver) return  //If game is not yet over then AI makes the move
+      let aiMove = this.minimax(this.aiPlayer).index;
+      this.makeMove(aiMove, this.aiPlayer);  
   }
 
-  minimax(player:string) {
+  minimax(player: string) {
     let availSpots = this.emptySquares();
 
     if (this.checkWin(this.huPlayer)) {
-      return { index:-1,score: -10 };
+      return { index: -1, score: -10 };
     } else if (this.checkWin(this.aiPlayer)) {
-      return { index:-1,score: 10 };
+      return { index: -1, score: 10 };
     } else if (availSpots.length === 0) {
-      return { index:-1,score: 0 };
+      return { index: -1, score: 0 };
     }
     let moves = [];
     for (var i = 0; i < availSpots.length; i++) {
-      let move = {"index":0,"score":0};
+      let move = { "index": 0, "score": 0 };
       //move.index = this.grid[availSpots[i]];
       move.index = availSpots[i];
       this.grid[availSpots[i]] = player;
@@ -110,7 +135,7 @@ export class AppComponent {
       moves.push(move);
     }
 
-    let bestMove:number = 0;
+    let bestMove: number = 0;
     if (player === this.aiPlayer) {
       var bestScore = -10000;
       for (var i = 0; i < moves.length; i++) {

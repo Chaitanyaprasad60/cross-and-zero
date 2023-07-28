@@ -1,16 +1,29 @@
 <div class="container">
-  <p>{{gameStatus}}</p>
-  <div class="board">
-    <div *ngFor="let i of [0,1,2]">
-      <div *ngFor="let j of [0,1,2]">
-        <div class="box" (click)="humanMove(3*j+i)">
-          {{grid[3*j+i]}}
+  
+  
+  <div class="main">
+    <div class="status">
+      <p>{{gameStatus}}</p>
+    </div>
+    
+    <div class="board">
+      <div *ngFor="let i of [0,1,2]">
+        <div *ngFor="let j of [0,1,2]">
+          <div class="box" (click)="humanMove(3*j+i)">
+            {{grid[3*j+i]}}
+          </div>
+    
         </div>
-  
+    
       </div>
-  
     </div>
   </div>
+  <div class="options">
+    <button mat-raised-button color="primary" (click)="resetGame()">Reset</button>
+    <button mat-raised-button color="primary" id="humanFirstButton" (click)="resetGame()">I Play First</button>
+    <button mat-raised-button color="primary" (click)="computerFirst()">Computer Play First</button>
+  </div>
+
 
 
 </div>
