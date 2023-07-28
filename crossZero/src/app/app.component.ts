@@ -24,7 +24,7 @@ export class AppComponent {
   turn = this.huPlayer;
   gameOver = false;
   gameStatus = 'Game On ..';
-  randonness = 0.1;
+  randonness = 0.08;
   depth = 7;
 
   humanMove(gridNumber: number) { //Only this function will be used to make Human Move.    
@@ -49,12 +49,10 @@ export class AppComponent {
     this.grid = ['', '', '', '', '', '', '', '', ''];    
   }
 
-  randomMove(){
-   
+  randomMove(){   
     let availSpots = this.emptySquares(); 
     if(availSpots.length == 0) return  
     let randomSpot = availSpots[Math.floor((Math.random() * (availSpots.length-1)))];
-    console.log(randomSpot,availSpots)
     this.makeMove(randomSpot, this.aiPlayer);
   }
 
