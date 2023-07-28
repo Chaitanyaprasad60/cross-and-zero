@@ -24,13 +24,16 @@ export class AppComponent {
   turn = this.huPlayer;
   gameOver = false;
   gameStatus = 'Game On ..';
+  randonness = 0.1;
+  depth = 7;
 
   humanMove(gridNumber: number) { //Only this function will be used to make Human Move.    
 
     if (this.turn !== this.huPlayer) return
+    if(this.grid[gridNumber]!='') return
     this.makeMove(gridNumber, this.huPlayer); //Human makes the move
     setTimeout(()=>{
-      if(Math.random() < 0.3){
+      if(Math.random() < this.randonness){
         this.randomMove()
       }
       else{
@@ -55,8 +58,9 @@ export class AppComponent {
     this.makeMove(randomSpot, this.aiPlayer);
   }
 
-  computerFirst() {
-    this.resetGame()
+  computerFirst() {    
+    this.resetGame();
+    this.turn = this.aiPlayer;
     this.bestMove();
 
   }
@@ -105,7 +109,7 @@ export class AppComponent {
       this.makeMove(aiMove, this.aiPlayer);  
   }
 
-  minimax(player: string) {
+  minimax(player: string,depth=this.depth) {
     let availSpots = this.emptySquares();
 
     if (this.checkWin(this.huPlayer)) {
@@ -115,6 +119,8 @@ export class AppComponent {
     } else if (availSpots.length === 0) {
       return { index: -1, score: 0 };
     }
+
+    if (depth == 0) return { index: -1, score: 0 };
     let moves = [];
     for (var i = 0; i < availSpots.length; i++) {
       let move = { "index": 0, "score": 0 };
@@ -123,10 +129,10 @@ export class AppComponent {
       this.grid[availSpots[i]] = player;
 
       if (player == this.aiPlayer) {
-        var result = this.minimax(this.huPlayer);
+        var result = this.minimax(this.huPlayer,depth-1);
         move.score = result.score;
       } else {
-        var result = this.minimax(this.aiPlayer);
+        var result = this.minimax(this.aiPlayer,depth-1);
         move.score = result.score;
       }
 
@@ -136,6 +142,7 @@ export class AppComponent {
     }
 
     let bestMove: number = 0;
+    let bestMoveArray:number[] = []; 
     if (player === this.aiPlayer) {
       var bestScore = -10000;
       for (var i = 0; i < moves.length; i++) {
@@ -143,6 +150,12 @@ export class AppComponent {
           bestScore = moves[i].score;
           bestMove = i;
         }
+      }
+
+      if(depth == this.depth) {
+        moves.forEach((element,index)=>{
+          if(element.score == bestScore) bestMoveArray.push(index)
+        })
       }
     } else {
       var bestScore = 10000;
@@ -153,8 +166,15 @@ export class AppComponent {
         }
       }
     }
-
+   
+    if(depth==this.depth){
+      return moves[this.randomInArray(bestMoveArray)];
+    }
     return moves[bestMove];
+  }
+
+  private randomInArray(arr:number[]) {   //Get a elemet at random from the given array
+    return arr[(Math.floor(Math.random() * arr.length))] | 0 ;
   }
 
 }
